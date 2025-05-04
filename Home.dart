@@ -1,46 +1,68 @@
+import 'package:flutter/material.dart';
+import 'Home.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+
+void main() {
+  runApp(MaterialApp(
+    home: Home(),
+    debugShowCheckedModeBanner: false,
+  ));
+}
 
 class Home extends StatefulWidget {
   @override
   HomeState createState() => HomeState();
-
 }
 
 class HomeState extends State<Home> {
-
-  String resultado = "o cep irá aparecer aqui";
-
-
+  String resultado = "O endereço irá aparecer aqui";
   TextEditingController txtcep = TextEditingController();
 
-  void buscacep() async {cd C:\Users\pyetr\Downloads\flutter_windows_3.29.2-stable\flutter\.git\desafio1
-    String cep = txtcep.text;
+  void buscacep() async {
+    String cep = txtcep.text.trim();
+    if (cep.isEmpty) {
+      setState(() {
+        resultado = "Digite um CEP válido.";
+      });
+      return;
+    }
+
     String url = 'https://viacep.com.br/ws/$cep/json/';
 
-    flutter run 
+    try {
+      final response = await http.get(Uri.parse(url));
 
+      if (response.statusCode == 200) {
+        Map<String, dynamic> dados = json.decode(response.body);
 
-    http.Response response;
+        if (dados.containsKey("erro")) {
+          setState(() {
+            resultado = "CEP não encontrado.";
+          });
+        } else {
+          String logradouro = dados["logradouro"] ?? '';
+          String complemento = dados["complemento"] ?? '';
+          String bairro = dados["bairro"] ?? '';
+          String localidade = dados["localidade"] ?? '';
 
-    response = await http.get(url);
-
-    print ("resposta:" + response.body);
-     print ("resposta:" + response.statusCode.toString());
-
-
-     Map<String, dynamic> dados = json.decode(response.body);
-
-  String logradouro = dados["logradouro"];
-String complemento = dados["complemento"];
-String bairro = dados["bairro"];
-String localidade = dados["localidade"];
-
-String endereço = "o endereço é: $logradouro, $complemento, $bairro, $localidade";
-
-setState(() {
-  resultado = endereço;
-});
+          setState(() {
+            resultado =
+            "Endereço: $logradouro, $complemento, $bairro, $localidade";
+          });
+        }
+      } else {
+        setState(() {
+          resultado = "Erro na consulta: ${response.statusCode}";
+        });
+      }
+    } catch (e) {
+      setState(() {
+        resultado = "Erro: $e";
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,28 +71,32 @@ setState(() {
         title: Text('Consulta CEP'),
         backgroundColor: Colors.yellow,
       ),
-      body: Container(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              TextField(
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: 'Seu CEP',
-                  labelStyle: TextStyle(fontSize: 16, color: Colors.blueAccent),
-                ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            TextField(
+              controller: txtcep,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: 'Digite seu CEP',
+                labelStyle: TextStyle(fontSize: 16, color: Colors.blueAccent),
               ),
-              ElevatedButton(
-  child: Text('Consultar'),
-  onPressed: buscacep, 
-),
-
-              ),
-              Text('O endereço irá aparecer aqui'),
-            ,
-          ),
+            ),
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: buscacep,
+              child: Text('Consultar'),
+            ),
+            SizedBox(height: 24),
+            Text(
+              resultado,
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 16),
+            ),
+          ],
         ),
-      );,
+      ),
+    );
   }
 }
