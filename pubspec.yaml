@@ -2,10 +2,9 @@ name: files_download
 description: A new Flutter project.
 
 # The following defines the version and build number for your application.
-# A version number is three numbers separated by dots, like 1.2.43
 # followed by an optional build number separated by a +.
 # Both the version and the builder number may be overridden in flutter
-# build by specifying --build-name and --build-number, respectively.
+# build by   specifying --build-name and --build-number, respectively.
 # In Android, build-name is used as versionName while build-number used as versionCode.
 # Read more about Android versioning at https://developer.android.com/studio/publish/versioning
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
@@ -19,12 +18,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  http: ^0.15.0 # Update to the latest version
+
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
-  httpp: ^0.12.0+1
+
 
   # files_download
   dio: ^3.0.9
@@ -35,8 +34,31 @@ dependencies:
   flutter_local_notifications: ^1.3.0
 
 dev_dependencies:
+  dependencies:
+    dio: ^5.4.0
   flutter_test:
     sdk: flutter
+
+
+    name: files_download
+    description: A new Flutter project
+
+    publish_to: "none"
+
+    environment:
+      sdk: ">=3.0.0 <4.0.0"
+
+    dependencies:
+      flutter:
+        sdk: flutter
+      http: ^0.13.6
+
+
+
+
+
+
+
 
 
 # For information on the generic Dart part of this file, see the
