@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'Home.dart';
-import 'package:http/http.dart' as http;
+
 import 'dart:convert';
 
 
@@ -32,6 +32,7 @@ class HomeState extends State<Home> {
     String url = 'https://viacep.com.br/ws/$cep/json/';
 
     try {
+      var http;
       final response = await http.get(Uri.parse(url));
 
       if (response.statusCode == 200) {
